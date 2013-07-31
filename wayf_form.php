@@ -53,7 +53,7 @@
                 <select id="idp" name="idp">
                 <option value="-"><?php echo get_string("auth_shib_wayf_select_prompt", auth_plugin_shibbuncif::PLUGIN_NAME); ?></option>
                 <?php
-                $preferred_idp = array_pop(auth_plugin_shibbuncif::get_common_domain_cookie());
+                $preferred_idp = auth_plugin_shibbuncif::get_common_domain_cookie();
                 $selected_set = false;
                 foreach($idp_list as $idp_entity_id => $idp_values_array) {
                     $idp_label = array_shift($idp_values_array);

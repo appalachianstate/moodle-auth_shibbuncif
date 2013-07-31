@@ -297,7 +297,7 @@
                 // If there a common domain cookie (preferred IdP) and it has
                 // an IdP we know about, use it.
                 $wayf_idp_list = self::get_wayf_idp_list();
-                $preferred_idp = array_pop(self::get_common_domain_cookie());
+                $preferred_idp = self::get_common_domain_cookie();
 
                 if (!empty($preferred_idp) && !array_key_exists($preferred_idp, $wayf_idp_list)) {
                     $preferred_idp = null;
@@ -636,11 +636,12 @@
         public static function get_common_domain_cookie()
         {
 
-            if (empty($_COOKIE[self::COMMON_DOMAIN_COOKIE_NAME])) {
-                return array();
+            if (!isset($_COOKIE[self::COMMON_DOMAIN_COOKIE_NAME]) || empty($_COOKIE[self::COMMON_DOMAIN_COOKIE_NAME])) {
+                return null;
             }
 
-            return array_map('base64_decode', explode(' ', $_COOKIE[self::COMMON_DOMAIN_COOKIE_NAME]));
+            $cookie_array = array_map('base64_decode', explode(' ', $_COOKIE[self::COMMON_DOMAIN_COOKIE_NAME]));
+            return array_pop($cookie_array);
 
         } // get_common_domain_cookie
 
