@@ -741,7 +741,7 @@
             }
 
             $result = array();
-            if (preg_match('/^(?:https?:\/\/)?([a-z\d][a-z\d-]+(?:\.[a-z\d][a-z\d-]+)*(?::\d{1,5})?)(\/[a-z0-9_+%\\/-]*)?\/?$/i', $CFG->wwwroot, $result)) {
+            if (preg_match('/^(?:https?:\/\/)?([a-z\d][a-z\d-]+(?:\.[a-z\d][a-z\d-]+)*(?::\d{1,5})?)(\/[a-z0-9_+%\\/\.-]*)?\/?$/i', $CFG->wwwroot, $result)) {
                 array_shift($result);
             }
             if (!isset($result[1])) {
