@@ -91,6 +91,7 @@
     $PAGE->set_title("$site->fullname: $loginsite");
     $PAGE->set_heading($site->fullname);
     $PAGE->set_pagelayout('login');
+    $PAGE->verify_https_required();
 
     echo $OUTPUT->header();
     include("wayf_form.php");

@@ -140,7 +140,12 @@
             global $CFG;
 
 
-            return "$CFG->httpswwwroot/" . self::PLUGIN_PATH . "/wayf.php";
+            $httpswwwroot = $CFG->wwwroot;
+            if (!empty($CFG->loginhttps)) {
+                $httpswwwroot = str_replace('http:', 'https:', $httpswwwroot);
+            }
+
+            return "$httpswwwroot/" . self::PLUGIN_PATH . "/wayf.php";
 
         } // get_wayf_url
 
