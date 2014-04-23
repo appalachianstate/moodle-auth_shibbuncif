@@ -92,7 +92,7 @@
 
             <div class="desc">
             <?php
-            echo get_string("loginusing");
+            echo get_string("loginsite");
             echo '<br/>';
             echo '(' . get_string("cookiesenabled") . ')';
             echo $OUTPUT->help_icon('cookiesenabled');

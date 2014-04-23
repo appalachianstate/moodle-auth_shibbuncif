@@ -27,7 +27,8 @@
     require_once '../../config.php';
     require_once './auth.php';
 
-
+     $PAGE->set_url('/auth/shibbuncif/index.php');
+     $PAGE->set_context(context_system::instance());
 
     /*
      * For an actively Shibboleth protected Moodle site, this is the
