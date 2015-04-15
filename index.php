@@ -40,9 +40,15 @@
     $plugin_configs = get_config(auth_plugin_shibbuncif::PLUGIN_NAME);
 
     // Must have the name of the server variable that contains the
-    // authenticated username and that server variable must exist
+    // authenticated username and that server variable must exist.
     if (empty($plugin_configs->username_attr) || empty($_SERVER[$plugin_configs->username_attr])) {
         print_error('auth_shib_err_misconfigured', auth_plugin_shibbuncif::PLUGIN_NAME, null,  get_admin()->email);
+    }
+
+    // Support for WAYFless URLs.
+    $target = optional_param('target', '', PARAM_LOCALURL);
+    if (!empty($target)) {
+        $SESSION->wantsurl = $target;
     }
 
     // If the user (identified by Shibboleth) already logged in by
@@ -59,16 +65,16 @@
         } else {
 
             // Already authenticated, send user on to standard home
-            // page by default
-            $urltogo = $CFG->wwwroot . '/';
+            // page by default, unless destination otherwise indicated
+            $gotourl = $CFG->wwwroot . '/';
 
             if (isset($SESSION->wantsurl) && (strpos($SESSION->wantsurl, $CFG->wwwroot) === 0)) {
                 // If desired URL already indicated and it's an
                 // address in this site, oblige
-                $urltogo = $SESSION->wantsurl;
+                $gotourl = $SESSION->wantsurl;
                 unset($SESSION->wantsurl);
             }
-            redirect($urltogo);
+            redirect($gotourl);
 
         }
 
@@ -112,35 +118,25 @@
         print_error('auth_shib_err_user_fail', auth_plugin_shibbuncif::PLUGIN_NAME);
     }
 
-    // This will put $user into $_SESSION['USER'] to which the
-    // global $USER is referenced
-    session_set_user($user);
-
-    $USER->loggedin = true;
-    $USER->site     = $CFG->wwwroot;
-
-    update_user_login_times();
-    set_login_session_preferences();
-    add_to_log(SITEID, 'user', 'login', "view.php?id={$USER->id}&amp;course=" . SITEID, $USER->id, 0, $USER->id);
-
+    complete_user_login($user);
 
     if (user_not_fully_set_up($USER)) {
         // We don't delete $SESSION->wantsurl yet, so we get there later
-        $urltogo = "{$CFG->wwwroot}/user/edit.php?id={$USER->id}&amp;course=" . SITEID;
+        $gotourl = "{$CFG->wwwroot}/user/edit.php?id={$USER->id}&amp;course=" . SITEID;
     } else if (isset($SESSION->wantsurl) && (strpos($SESSION->wantsurl, $CFG->wwwroot) === 0)) {
-        $urltogo = $SESSION->wantsurl;
+        $gotourl = $SESSION->wantsurl;
         unset($SESSION->wantsurl);
     } else {
-        $urltogo = "{$CFG->wwwroot}/";
+        $gotourl = "{$CFG->wwwroot}/";
         unset($SESSION->wantsurl);
     }
 
     // If not a site admin and defaulthomepage enabled go to
     // my-moodle page instead of front page
     if (!empty($CFG->defaulthomepage) && $CFG->defaulthomepage == HOMEPAGE_MY && !isguestuser() && !has_capability('moodle/site:config', context_system::instance())) {
-        if ($urltogo == $CFG->wwwroot || $urltogo == $CFG->wwwroot.'/' || $urltogo == $CFG->wwwroot.'/index.php') {
-            $urltogo = $CFG->wwwroot.'/my/';
+        if ($gotourl == $CFG->wwwroot || $gotourl == $CFG->wwwroot . '/' || $gotourl == $CFG->wwwroot . '/index.php') {
+            $gotourl = $CFG->wwwroot . '/my/';
         }
     }
 
-    redirect($urltogo);
+    redirect($gotourl);
