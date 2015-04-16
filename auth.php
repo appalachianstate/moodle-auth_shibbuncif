@@ -194,7 +194,9 @@
                 }
 
                 // If multi-value attributes, just take the first
-                $result[$key] = trim(array_shift(explode(';', $_SERVER[$value])));
+                $temparray = explode(';', $_SERVER[$value]);
+                $result[$key] = trim(array_shift($temparray));
+                unset($temparray);
 
                 // Massage any data items
                 switch ($key) {
@@ -204,7 +206,8 @@
                         break;
                     case 'idnumber' :
                         // To match Banner/LMB, strip off domain
-                        $result[$key] = array_shift(explode('@', $result[$key]));
+                        $temparray = explode('@', $result[$key]);
+                        $result[$key] = array_shift($temparray);
                         break;
                 }
 
@@ -471,7 +474,7 @@
             if ($frm->wayf === 'on') {
                 $site_login_url        = self::get_wayf_url();
                 $update_site_login_url = true;
-            } elseif ($this->config->wayf === 'on' && get_config('moodle', 'alternateloginurl') === self::get_wayf_url()) {
+            } elseif (!empty($this->config->wayf) && $this->config->wayf === 'on' && get_config('moodle', 'alternateloginurl') === self::get_wayf_url()) {
                 // If integrated WAYF *was* enabled, and if Moodle
                 // alternate URL was set to our WAYF, reset it
                 $update_site_login_url = true;
