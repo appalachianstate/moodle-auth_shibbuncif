@@ -40,7 +40,7 @@
 
 <div class="loginbox clearfix twocolumns">
 
-    <div class="loginpanel">
+    <div class="col-md-6 well">
 
         <h2><?php echo (!empty($auth_plugin->config->wayf_heading) ? $auth_plugin->config->wayf_heading : 'Login using the UNC Identity Federation'); ?></h2>
 
@@ -78,7 +78,7 @@
     </div>
 
 
-    <div class="signuppanel" style="text-align: center;">
+    <div class="col-md-6" style="text-align: center;">
 
         <?php if (($CFG->registerauth == 'email') || !empty($CFG->registerauth)): ?>
         <div class="skiplinks">
