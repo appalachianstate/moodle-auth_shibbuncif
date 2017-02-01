@@ -38,7 +38,7 @@
 
 ?>
 
-<div class="loginbox clearfix twocolumns">
+<div class="clearfix">
 
     <div class="col-md-6 well">
 
@@ -46,11 +46,11 @@
 
         <div class="subcontent">
 
-            <p><label for="idp"><?php echo get_string("auth_shib_wayf_instructions", auth_plugin_shibbuncif::PLUGIN_NAME); ?></label></p>
+            <label for="idp"><?php echo get_string("auth_shib_wayf_instructions", auth_plugin_shibbuncif::PLUGIN_NAME); ?></label>
 
             <form action="wayf.php" method="post" id="guestlogin">
 
-                <select id="idp" name="idp">
+                <select id="idp" class="form-control" name="idp">
                 <option value="-"><?php echo get_string("auth_shib_wayf_select_prompt", auth_plugin_shibbuncif::PLUGIN_NAME); ?></option>
                 <?php
                 $preferred_idp = auth_plugin_shibbuncif::get_common_domain_cookie();
@@ -66,8 +66,8 @@
                 }
                 ?>
                 </select>
-                <br /><br />
-                <p><input type="submit" value="<?php echo get_string("select"); ?>" accesskey="s" /></p>
+                <br />
+                <p><input class="btn" type="submit" value="<?php echo get_string("select"); ?>" accesskey="s" /></p>
 
             </form>
 
@@ -78,7 +78,7 @@
     </div>
 
 
-    <div class="col-md-6" style="text-align: center;">
+    <div class="col-md-6">
 
         <?php if (($CFG->registerauth == 'email') || !empty($CFG->registerauth)): ?>
         <div class="skiplinks">
@@ -88,7 +88,7 @@
 
         <h2><?php echo get_string("internal_login_heading", auth_plugin_shibbuncif::PLUGIN_NAME); ?></h2>
 
-        <div class="subcontent loginsub" style="text-align: center">
+        <div class="subcontent loginsub">
 
             <div class="desc">
             <?php
@@ -109,14 +109,15 @@
             <form action="<?php echo $CFG->httpswwwroot; ?>/login/index.php" method="post" id="login" <?php echo $autocomplete; ?>>
 
                 <div class="loginform">
-                    <div class="form-label"><label for="username"><?php echo get_string("username"); ?></label></div>
-                    <div class="form-input"><input type="text" name="username" id="username" size="15" value="<?php p($frm->username); ?>"/></div>
-                    <div class="clearer"><!-- --></div>
-                    <div class="form-label"><label for="password"><?php echo get_string("password"); ?></label></div>
-                    <div class="form-input">
-                        <input type="password" name="password" id="password" size="15" value="" <?php echo $autocomplete; ?> />
-                        <input type="submit" id="loginbtn" value="<?php echo get_string("login"); ?>" />
-                    </div>
+                	<div class="form-group">
+                		<label for="username"><?php echo get_string("username"); ?></label>
+                		<input type="text" class="form-control" name="username" id="username" size="15" value="<?php p($frm->username); ?>"/>
+                	</div>
+                	<div class="form-group">
+                		<label for="password"><?php echo get_string("password"); ?></label>
+                		<input class="form-control" type="password" name="password" id="password" size="15" value="" <?php echo $autocomplete; ?> />
+                	</div>
+                    <input class="btn" type="submit" id="loginbtn" value="<?php echo get_string("login"); ?>" />
                 </div>
                 <div class="clearer"><!-- --></div>
 
@@ -135,7 +136,7 @@
         </div>
 
         <?php if ($CFG->guestloginbutton and !isguestuser()):  ?>
-        <div class="subcontent guestsub" style="text-align: center;">
+        <div class="subcontent guestsub">
         <div class="desc">
           <?php echo get_string("someallowguest"); ?>
         </div>
@@ -143,7 +144,7 @@
           <div class="guestform">
             <input type="hidden" name="username" value="guest" />
             <input type="hidden" name="password" value="guest" />
-            <input type="submit" value="<?php echo get_string("loginguest"); ?>" />
+            <input type="submit" class="btn" value="<?php echo get_string("loginguest"); ?>" />
           </div>
         </form>
         </div>
