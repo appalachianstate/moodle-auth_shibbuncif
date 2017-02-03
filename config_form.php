@@ -62,7 +62,7 @@
 
 ?>
 
-<table cellspacing="0" cellpadding="5" border="0">
+<table>
 
   <thead>
     <tr><th width="17%"></th><th width="28%"></th><th width="55%"></th></tr>
@@ -74,7 +74,7 @@
             <label for="username_attr"><?php echo get_string("auth_shib_username_attr", self::PLUGIN_NAME); ?>: </label>
         </td>
         <td>
-            <input id="username_attr" name="username_attr" type="text" size="32" value="<?php echo $frm->username_attr; ?>"/>
+            <input id="username_attr" class="form-control" name="username_attr" type="text" size="32" value="<?php echo $frm->username_attr; ?>"/>
             <?php if (isset($err['username_attr'])) echo "<br /><span class=\"notifyproblem\">{$OUTPUT->error_text($err['username_attr'])}</span>"; ?>
         </td>
         <td>
@@ -89,7 +89,7 @@
             <label for="spssl"><?php echo get_string("auth_shib_spssl", self::PLUGIN_NAME); ?>: </label>
         </td>
         <td>
-            <input id="spssl" name="spssl" type="checkbox"<?php echo (isset($frm->spssl) && $frm->spssl === 'on') ? ' checked' : ''; ?>/>
+            <input id="spssl" class="form-control" name="spssl" type="checkbox"<?php echo (isset($frm->spssl) && $frm->spssl === 'on') ? ' checked' : ''; ?>/>
         </td>
         <td style="border-top: 1px solid #ccc;">
             <?php echo get_string("auth_shib_spssl_desc", self::PLUGIN_NAME); ?>
@@ -103,7 +103,7 @@
             <label for="login_handler"><?php echo get_string("auth_shib_login_handler", self::PLUGIN_NAME); ?>: </label>
         </td>
         <td>
-            <input id="login_handler" name="login_handler" type="text" size="32" value="<?php echo $frm->login_handler; ?>"/>
+            <input id="login_handler" class="form-control" name="login_handler" type="text" size="32" value="<?php echo $frm->login_handler; ?>"/>
             <?php if (isset($err['login_handler'])) echo "<br /><span class=\"notifyproblem\">{$OUTPUT->error_text($err['login_handler'])}</span>"; ?>
         </td>
         <td style="border-top: 1px solid #ccc;">
@@ -118,7 +118,7 @@
             <label for="logout_handler"><?php echo get_string("auth_shib_logout_handler", self::PLUGIN_NAME); ?>: </label>
         </td>
         <td>
-            <input id="logout_handler" name="logout_handler" type="text" size="32" value="<?php echo $frm->logout_handler; ?>"/>
+            <input id="logout_handler" class="form-control" name="logout_handler" type="text" size="32" value="<?php echo $frm->logout_handler; ?>"/>
             <?php if (isset($err['logout_handler'])) echo "<br /><span class=\"notifyproblem\">{$OUTPUT->error_text($err['logout_handler'])}</span>"; ?>
         </td>
         <td style="border-top: 1px solid #ccc;">
@@ -133,7 +133,7 @@
             <label for="logout_return_url"><?php echo get_string("auth_shib_logout_return_url", self::PLUGIN_NAME); ?>: </label>
         </td>
         <td>
-            <input id="logout_return_url" name="logout_return_url" type="text" size="32" value="<?php echo $frm->logout_return_url; ?>"/>
+            <input id="logout_return_url" class="form-control" name="logout_return_url" type="text" size="32" value="<?php echo $frm->logout_return_url; ?>"/>
             <?php if (isset($err['logout_return_url'])) echo "<br /><span class=\"notifyproblem\">{$OUTPUT->error_text($err['logout_return_url'])}</span>"; ?>
         </td>
         <td style="border-top: 1px solid #ccc;">
@@ -148,7 +148,7 @@
             <label for="idp_logout_attr"><?php echo get_string("auth_shib_idp_logout_attr", self::PLUGIN_NAME); ?>: </label>
         </td>
         <td>
-            <input id="idp_logout_attr" name="idp_logout_attr" type="text" size="32" value="<?php echo $frm->idp_logout_attr; ?>"/>
+            <input id="idp_logout_attr" class="form-control" name="idp_logout_attr" type="text" size="32" value="<?php echo $frm->idp_logout_attr; ?>"/>
             <?php if (isset($err['idp_logout_attr'])) echo "<br /><span class=\"notifyproblem\">{$OUTPUT->error_text($err['idp_logout_attr'])}</span>"; ?>
         </td>
         <td style="border-top: 1px solid #ccc;">
@@ -163,7 +163,7 @@
             <label for="wayf"><?php echo get_string("auth_shib_wayf", self::PLUGIN_NAME); ?>: </label>
         </td>
         <td>
-            <input id="wayf" name="wayf" type="checkbox"<?php echo (isset($frm->wayf) && $frm->wayf === 'on') ? ' checked' : ''; ?>/>
+            <input id="wayf" class="form-control" name="wayf" type="checkbox"<?php echo (isset($frm->wayf) && $frm->wayf === 'on') ? ' checked' : ''; ?>/>
         </td>
         <td style="border-top: 1px solid #ccc;">
             <?php echo get_string("auth_shib_wayf_desc", self::PLUGIN_NAME); ?>
@@ -177,7 +177,7 @@
             <label for="wayf_idp_list"><?php echo get_string("auth_shib_wayf_idp_list", self::PLUGIN_NAME); ?>: </label>
         </td>
         <td>
-            <textarea id="wayf_idp_list" name="wayf_idp_list" rows="10" cols="30" style="overflow: auto;"><?php echo $frm->wayf_idp_list; ?></textarea>
+            <textarea id="wayf_idp_list" class="form-control" name="wayf_idp_list" rows="10" cols="30" style="overflow: auto;"><?php echo $frm->wayf_idp_list; ?></textarea>
             <?php if (isset($err['wayf_idp_list'])) echo "<br /><span class=\"notifyproblem\">{$OUTPUT->error_text($err['wayf_idp_list'])}</span>"; ?>
         </td>
         <td style="border-top: 1px solid #ccc;">
@@ -192,7 +192,7 @@
             <label for="wayf_heading"><?php echo get_string("auth_shib_wayf_heading", self::PLUGIN_NAME); ?>: </label>
         </td>
         <td>
-            <input id="wayf_heading" name="wayf_heading" type="text" size="32" value="<?php echo $frm->wayf_heading; ?>"/>
+            <input id="wayf_heading" class="form-control" name="wayf_heading" type="text" size="32" value="<?php echo $frm->wayf_heading; ?>"/>
             <?php if (isset($err['wayf_heading'])) echo "<br /><span class=\"notifyproblem\">{$OUTPUT->error_text($err['wayf_heading'])}</span>"; ?>
         </td>
         <td style="border-top: 1px solid #ccc;">
