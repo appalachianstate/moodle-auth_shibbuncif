@@ -129,7 +129,9 @@
                 <?php } ?>
 
                 <div class="clearer"><!-- --></div>
-                <div class="forgetpass"><a href="forgot_password.php"><?php echo get_string("forgotten"); ?></a></div>
+                <?php if (!empty($CFG->forgottenpasswordurl)): ?>
+                <div class="forgetpass"><a href="<?php echo $CFG->forgottenpasswordurl; ?>"><?php echo get_string("forgotten"); ?></a></div>
+                <?php endif; ?>
 
             </form>
 
