@@ -19,13 +19,13 @@
      *  UNC Id Federation (Shibboleth) authentication plugin
      *
      * @package    auth_shibbuncif
-     * @author     Fred Woolard (based on auth_shibboleth plugin {@link http://moodle.org})
-     * @copyright  2013 Appalachian State University
+     * @author     Fred Woolard (based on auth_shibboleth plugin)
+     * @copyright  2013 onward Appalachian State University
      * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
      */
 
-    require_once("../../config.php");
-    require_once("./auth.php");
+    require_once(__DIR__ . '/../../config.php');
+    require_once(__DIR__ . '/auth.php');
 
 
 
@@ -67,7 +67,7 @@
     if (!empty($selected_idp) && !$errorcode) {
         if (!array_key_exists($selected_idp, $idp_list)) {
             // Bad value, set error and re-display login form
-            $errormsg = get_string('auth_shib_err_invalid_idp', auth_plugin_shibbuncif::PLUGIN_NAME);
+            $errormsg = get_string('auth_shibbuncif_err_invalid_idp', auth_plugin_shibbuncif::PLUGIN_NAME);
         } else {
             // Persist the selection in the common domain cookie
             auth_plugin_shibbuncif::set_common_domain_cookie($selected_idp);
@@ -94,7 +94,7 @@
     $PAGE->verify_https_required();
 
     echo $OUTPUT->header();
-    include("wayf_form.php");
+    include(__DIR__ . '/wayf_form.php');
     if ($errormsg) {
         $PAGE->requires->js_init_call('M.util.focus_login_error', null, true);
     } elseif (!empty($CFG->loginpageautofocus)) {

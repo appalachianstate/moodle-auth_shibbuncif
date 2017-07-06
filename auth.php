@@ -19,8 +19,8 @@
      *  UNC Id Federation (Shibboleth) authentication plugin
      *
      * @package    auth_shibbuncif
-     * @author     Fred Woolard (based on auth_shibboleth plugin {@link http://moodle.org})
-     * @copyright  2013 Appalachian State University
+     * @author     Fred Woolard (based on auth_shibboleth plugin)
+     * @copyright  2013 onward Appalachian State University
      * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
      */
 
@@ -64,16 +64,16 @@
          * Class constants
          */
 
-        const PLUGIN_NAME                        = "auth_shibbuncif";
-        const PLUGIN_PATH                        = "auth/shibbuncif";
+        const PLUGIN_NAME                           = 'auth_shibbuncif';
 
-        const COMMON_DOMAIN_COOKIE_NAME          = "_saml_idp";
+        const COMMON_DOMAIN_COOKIE_NAME             = '_saml_idp';
 
-        const DEFAULT_USERNAME_ATTR              = 'HTTP_SHIB_EP_PRINCIPALNAME';
-        const DEFAULT_IDP_LOGOUT_ATTR            = 'HTTP_SHIB_LOGOUTURL';
+        const DEFAULT_USERNAME_ATTR                 = 'HTTP_SHIB_EP_PRINCIPALNAME';
+        const DEFAULT_IDP_LOGOUT_ATTR               = 'HTTP_SHIB_LOGOUTURL';
 
-        const DEFAULT_LOGIN_HANDLER              = '/Shibboleth.sso/Login';
-        const DEFAULT_LOGOUT_HANDLER             = '/Shibboleth.sso/Logout';
+        const DEFAULT_LOGIN_HANDLER                 = '/Shibboleth.sso/Login';
+        const DEFAULT_LOGOUT_HANDLER                = '/Shibboleth.sso/Logout';
+
 
 
         /*
@@ -83,11 +83,18 @@
         /**
          * @var array Default values to use for configuring userfield mapping.
          */
-        public static $default_usermaps          = array('firstname'   => 'HTTP_SHIB_INETORGPERSON_GIVENNAME',
-                                                         'lastname'    => 'HTTP_SHIB_PERSON_SURNAME',
-                                                         'email'       => 'HTTP_SHIB_INETORGPERSON_MAIL',
-                                                         'description' => 'HTTP_SHIB_INETORGPERSON_DISPLAYNAME',
-                                                         'idnumber'    => 'HTTP_SHIB_CAMPUSPERMANENTID');
+        private static $userfieldmaps               = array('firstname'   => 'HTTP_SHIB_INETORGPERSON_GIVENNAME',
+                                                            'lastname'    => 'HTTP_SHIB_PERSON_SURNAME',
+                                                            'email'       => 'HTTP_SHIB_INETORGPERSON_MAIL',
+                                                            'idnumber'    => 'HTTP_SHIB_CAMPUSPERMANENTID');
+
+        /**
+         * Override
+         * @see auth_plugin_base
+         *
+         */
+        public $userfields                          = array('firstname', 'lastname', 'email', 'idnumber');
+
 
 
         /**
@@ -98,11 +105,7 @@
         {
 
             $this->authtype   = 'shibbuncif';
-
-            // The userfield configs are managed by auth_config which
-            // still uses the legacy style (auth/pluginname) for calls
-            // to get_config/set_config
-            $this->config     = (object)array_merge((array)get_config(self::PLUGIN_PATH), (array)get_config(self::PLUGIN_NAME));
+            $this->config     = get_config(self::PLUGIN_NAME);
 
         } // __construct
 
@@ -121,7 +124,7 @@
             global $CFG;
 
 
-            return "$CFG->wwwroot/" . self::PLUGIN_PATH . "/index.php";
+            return "{$CFG->wwwroot}/auth/shibbuncif/index.php";
 
         } // get_protected_resource_url
 
@@ -145,7 +148,7 @@
                 $httpswwwroot = str_replace('http:', 'https:', $httpswwwroot);
             }
 
-            return "$httpswwwroot/" . self::PLUGIN_PATH . "/wayf.php";
+            return "{$httpswwwroot}/auth/shibbuncif/wayf.php";
 
         } // get_wayf_url
 
@@ -162,8 +165,11 @@
         public function user_login($username, $password)
         {
 
-            return    isset($_SERVER[$this->config->username_attr])
-                   && strtolower($_SERVER[$this->config->username_attr]) === strtolower($username);
+            $servervar = empty($this->config->username_attr)
+                       ? self::DEFAULT_USERNAME_ATTR : $this->config->username_attr;
+
+           return isset($_SERVER[$servervar])
+               && strtolower($_SERVER[$servervar]) === strtolower($username);
 
         } // user_login
 
@@ -229,13 +235,14 @@
         private function get_attributes()
         {
 
-            $mapped_attrs = array('username' => $this->config->username_attr);
+            $mapped_attrs = array(
+                'username' => empty($this->config->username_attr)
+                            ? self::DEFAULT_USERNAME_ATTR : $this->config->username_attr);
 
-            foreach ($this->userfields as $field) {
-                if (empty($this->config->{"field_map_$field"})) {
-                    continue;
-                }
-                $mapped_attrs[$field] = $this->config->{"field_map_$field"};
+            foreach (array_keys(self::$userfieldmaps) as $fieldname) {
+                $mapped_attrs[$fieldname] = empty($this->config->{"field_map_$fieldname"})
+                                          ? self::$userfieldmaps[$fieldname]
+                                          : $this->config->{"field_map_$fieldname"};
             }
 
             return $mapped_attrs;
@@ -375,135 +382,6 @@
 
 
         /**
-         * Override
-         * @see auth_plugin_base::config_form()
-         *
-         * Called from auth_config.php in the middle of hand-crafted
-         * form rendering. $frm contains either submitted form data
-         * or this plugin's configs (fetched on GETs), $err contains
-         * validation errors, and $user_fields contains the parent
-         * class' list of user record fields that can be updated by
-         * an auth plugin.
-         *
-         * @uses $CFG, $PAGE, $OUTPUT
-         */
-        public function config_form($frm, $err, $user_fields)
-        {
-            global $CFG, $PAGE, $OUTPUT, $authplugin;
-
-
-            include "config_form.php";
-
-        } // config_form
-
-
-
-        /**
-         * Override
-         * @see auth_plugin_base::validate_form
-         *
-         * Called from auth_config.php if data submitted
-         * and sesskey confirmed. If any validation errors
-         * add to $err using config name (HTML form input
-         * name) as key
-         */
-        public function validate_form($frm, &$err)
-        {
-
-            $test_url = null;
-
-            // username_attr
-            $frm->username_attr = trim(clean_param(isset($frm->username_attr) ? $frm->username_attr : '', PARAM_ALPHANUMEXT));
-            if (empty($frm->username_attr)) {
-                $err['username_attr'] = get_string('auth_shib_err_username_attr_empty', self::PLUGIN_NAME);
-            }
-
-            // spssl
-            if (!isset($frm->spssl) || $frm->spssl !== 'on') $frm->spssl = 'off';
-
-            // login_handler
-            $frm->login_handler = trim(clean_param(isset($frm->login_handler) ? $frm->login_handler : '', PARAM_URL));
-
-            // logout_handler
-            $frm->logout_handler = trim(clean_param(isset($frm->logout_handler) ? $frm->logout_handler : '', PARAM_URL));
-
-            // logout_return_url
-            $frm->logout_return_url = trim(clean_param(isset($frm->logout_return_url) ? $frm->logout_return_url : '', PARAM_URL));
-
-            // idp_logout_attr
-            $frm->idp_logout_attr = trim(clean_param(isset($frm->idp_logout_attr) ? $frm->idp_logout_attr : '', PARAM_ALPHANUMEXT));
-
-            // wayf
-            if (!isset($frm->wayf) || $frm->wayf !== 'on') $frm->wayf = 'off';
-
-            // wayf_idp_list
-            $frm->wayf_idp_list = trim(clean_param(isset($frm->wayf_idp_list) ? $frm->wayf_idp_list : '', PARAM_NOTAGS));
-            if (empty($frm->wayf_idp_list)) {
-                if (isset($frm->wayf) && $frm->wayf === 'on') {
-                    $err['wayf_idp_list'] = get_string('auth_shib_err_wayf_idp_list_empty', self::PLUGIN_NAME);
-                }
-            } elseif (!self::valid_idp_list($frm->wayf_idp_list)) {
-                $err['wayf_idp_list'] = get_string('auth_shib_err_wayf_idp_list_invalid', self::PLUGIN_NAME);
-            }
-
-            // wayf_heading
-            $frm->wayf_heading = trim(clean_param(isset($frm->wayf_heading) ? $frm->wayf_heading : '', PARAM_TEXT));
-
-            // userfields
-            foreach($this->userfields as $field_name) {
-                $frm->{"field_map_$field_name"} = trim(clean_param(isset($frm->{"field_map_$field_name"}) ? $frm->{"field_map_$field_name"} : '', PARAM_ALPHANUMEXT));
-            }
-
-        } // validate_form
-
-
-
-        /**
-         * Override
-         * @see auth_plugin_base::process_config()
-         *
-         * Called from auth_config.php after form validation
-         * and when the $err array contains no entries
-         */
-        public function process_config($frm)
-        {
-
-            // Determine if site's alternative login URL needs to be set
-            $site_login_url         = '';
-            $update_site_login_url  = false;
-            if ($frm->wayf === 'on') {
-                $site_login_url        = self::get_wayf_url();
-                $update_site_login_url = true;
-            } elseif (!empty($this->config->wayf) && $this->config->wayf === 'on' && get_config('moodle', 'alternateloginurl') === self::get_wayf_url()) {
-                // If integrated WAYF *was* enabled, and if Moodle
-                // alternate URL was set to our WAYF, reset it
-                $update_site_login_url = true;
-            }
-
-            // Save settings
-            set_config('username_attr',      $frm->username_attr,      self::PLUGIN_NAME);
-            set_config('spssl',              $frm->spssl,              self::PLUGIN_NAME);
-            set_config('login_handler',      $frm->login_handler,      self::PLUGIN_NAME);
-            set_config('logout_handler',     $frm->logout_handler,     self::PLUGIN_NAME);
-            set_config('logout_return_url',  $frm->logout_return_url,  self::PLUGIN_NAME);
-            set_config('idp_logout_attr',    $frm->idp_logout_attr,    self::PLUGIN_NAME);
-            set_config('wayf',               $frm->wayf,               self::PLUGIN_NAME);
-            set_config('wayf_idp_list',      $frm->wayf_idp_list,      self::PLUGIN_NAME);
-            set_config('wayf_heading',       $frm->wayf_heading,       self::PLUGIN_NAME);
-
-            if ($update_site_login_url) {
-                set_config('alternateloginurl', $site_login_url);
-            }
-
-            // The userfield configs are handled by auth_config.php
-
-            return true;
-
-        } // process_config
-
-
-
-        /**
          * Generate array of IdPs from settings
          *
          * @access public
@@ -516,7 +394,7 @@
             static $cached_value = null;
 
 
-
+            // If cached value on hand return it.
             if ($cached_value != null) {
                 return $cached_value;
             }
@@ -537,7 +415,7 @@
                 // Blank line
                 if (empty($idp_line)) continue;
 
-                $idp_parts = array_map('trim',explode(',', $idp_line));
+                $idp_parts = array_map('trim', explode(',', $idp_line));
 
                 // Only an entityId present, no corresponding label
                 if (count($idp_parts) <= 1) {
@@ -556,7 +434,6 @@
 
             }
             $cached_value = $idp_list;
-
 
             return $idp_list;
 
@@ -760,6 +637,74 @@
             return $result;
 
         } // split_wwwroot
+
+
+
+        public static function write_setting_hook(admin_setting $settinginstance, &$arraywrappeddata)
+        {
+
+            switch ($settinginstance->name)
+            {
+
+                case 'wayf':
+                    return self::write_setting_wayf($arraywrappeddata[0]);
+                    break;
+                case 'wayf_idp_list':
+                    return self::write_setting_wayf_idp_list($arraywrappeddata[0]);
+                    break;
+                default:
+                    return false;
+
+            }
+
+        }
+
+
+
+        private static function write_setting_wayf(&$data)
+        {
+            global $CFG;
+
+
+            if (isset($data) && $data === 'on') {
+
+                set_config('alternateloginurl', self::get_wayf_url());
+
+            } else {
+
+                // Not set, empty, or anything not 'on' same as off
+                $data = 'off';
+
+                // If WAYF was enabled and now off, reset (clear) the
+                // Moodle alternate login URL.
+                $oldsetting = get_config(self::PLUGIN_NAME, 'wayf');
+                if (isset($oldsetting) && $oldsetting === 'on') {
+                    set_config('alternateloginurl', '');
+                }
+
+            }
+
+            return true;
+
+        }
+
+
+
+        private static function write_setting_wayf_idp_list(&$data)
+        {
+
+            if (empty($data)) {
+                $wayf = get_config(self::PLUGIN_NAME, 'wayf');
+                if ($wayf === 'on') {
+                    return get_string('auth_shibbuncif_err_wayf_idp_list_empty', self::PLUGIN_NAME);
+                }
+            } elseif (!self::valid_idp_list($data)) {
+                return get_string('auth_shibbuncif_err_wayf_idp_list_invalid', self::PLUGIN_NAME);
+            }
+
+            return true;
+
+        }
 
 
     } // auth_plugin_shibbuncif

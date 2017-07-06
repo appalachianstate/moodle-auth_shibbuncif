@@ -19,8 +19,8 @@
      *  UNC Id Federation (Shibboleth) authentication plugin
      *
      * @package    auth_shibbuncif
-     * @author     Fred Woolard (based on auth_shibboleth plugin {@link http://moodle.org})
-     * @copyright  2013 Appalachian State University
+     * @author     Fred Woolard (based on auth_shibboleth plugin)
+     * @copyright  2013 onward Appalachian State University
      * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
      */
 

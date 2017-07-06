@@ -19,8 +19,8 @@
      *  UNC Id Federation (Shibboleth) authentication plugin
      *
      * @package    auth_shibbuncif
-     * @author     Fred Woolard (based on auth_shibboleth plugin {@link http://moodle.org})
-     * @copyright  2013 Appalachian State University
+     * @author     Fred Woolard (based on auth_shibboleth plugin)
+     * @copyright  2013 onward Appalachian State University
      * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
      */
 
@@ -28,7 +28,7 @@
 
 
 
-    $auth_plugin = new auth_plugin_shibbuncif();
+    $config = get_config(auth_plugin_shibbuncif::PLUGIN_NAME);
 
     if (!empty($CFG->loginpasswordautocomplete)) {
         $autocomplete = 'autocomplete="off"';
@@ -42,16 +42,16 @@
 
     <div class="col-md-6 well">
 
-        <h2><?php echo (!empty($auth_plugin->config->wayf_heading) ? $auth_plugin->config->wayf_heading : 'Login using the UNC Identity Federation'); ?></h2>
+        <h2><?php echo (!empty($config->wayf_heading) ? $config->wayf_heading : 'Login using the UNC Identity Federation'); ?></h2>
 
         <div class="subcontent">
 
-            <label for="idp"><?php echo get_string("auth_shib_wayf_instructions", auth_plugin_shibbuncif::PLUGIN_NAME); ?></label>
+            <label for="idp"><?php echo get_string("auth_shibbuncif_wayf_instructions", auth_plugin_shibbuncif::PLUGIN_NAME); ?></label>
 
             <form action="wayf.php" method="post" id="guestlogin">
 
                 <select id="idp" class="form-control" name="idp">
-                <option value="-"><?php echo get_string("auth_shib_wayf_select_prompt", auth_plugin_shibbuncif::PLUGIN_NAME); ?></option>
+                <option value="-"><?php echo get_string("auth_shibbuncif_wayf_select_prompt", auth_plugin_shibbuncif::PLUGIN_NAME); ?></option>
                 <?php
                 $preferred_idp = auth_plugin_shibbuncif::get_common_domain_cookie();
                 $selected_set = false;
@@ -71,7 +71,7 @@
 
             </form>
 
-            <p><?php echo get_string("auth_shib_contact_administrator", auth_plugin_shibbuncif::PLUGIN_NAME, get_admin()->email); ?></p>
+            <p><?php echo get_string('auth_shibbuncif_contact_administrator', auth_plugin_shibbuncif::PLUGIN_NAME, get_admin()->email); ?></p>
 
         </div>
 
@@ -86,7 +86,7 @@
         </div>
         <?php endif; ?>
 
-        <h2><?php echo get_string("internal_login_heading", auth_plugin_shibbuncif::PLUGIN_NAME); ?></h2>
+        <h2><?php echo get_string('auth_shibbuncif_internal_login_heading', auth_plugin_shibbuncif::PLUGIN_NAME); ?></h2>
 
         <div class="subcontent loginsub">
 

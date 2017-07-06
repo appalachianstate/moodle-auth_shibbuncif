@@ -19,13 +19,14 @@
      *  UNC Id Federation (Shibboleth) authentication plugin
      *
      * @package    auth_shibbuncif
-     * @author     Fred Woolard (based on auth_shibboleth plugin {@link http://moodle.org})
-     * @copyright  2013 Appalachian State University
+     * @author     Fred Woolard (based on auth_shibboleth plugin)
+     * @copyright  2013 onward Appalachian State University
      * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
      */
 
-    require_once '../../config.php';
-    require_once './auth.php';
+    require_once (__DIR__ . '/../../config.php');
+    require_once (__DIR__ . '/auth.php');
+
 
      $PAGE->set_url('/auth/shibbuncif/index.php');
      $PAGE->set_context(context_system::instance());
@@ -41,8 +42,11 @@
 
     // Must have the name of the server variable that contains the
     // authenticated username and that server variable must exist.
-    if (empty($plugin_configs->username_attr) || empty($_SERVER[$plugin_configs->username_attr])) {
-        print_error('auth_shib_err_misconfigured', auth_plugin_shibbuncif::PLUGIN_NAME, null,  get_admin()->email);
+    $usernameservervar = empty($plugin_configs->username_attr)
+        ? auth_plugin_shibbuncif::DEFAULT_USERNAME_ATTR : $plugin_configs->username_attr;
+
+    if (empty($_SERVER[$usernameservervar])) {
+        print_error('auth_shibbuncif_err_misconfigured', auth_plugin_shibbuncif::PLUGIN_NAME, null, get_admin()->email);
     }
 
     // Support for WAYFless URLs.
@@ -57,7 +61,7 @@
     // THE SAME AS THE USERNAME STORED IN $SESSION.
     if (isloggedin() && !isguestuser()) {
 
-        if ($USER->username != strtolower($_SERVER[$auth_plugin->config->username_attr])) {
+        if ($USER->username !== strtolower($_SERVER[$usernameservervar])) {
 
             // Destroy old session
             require_logout();
@@ -102,8 +106,11 @@
 
     // If IdP logout URL is available put in $SESSION
     // for later use as it might not be visible later
-    if (!empty($_SERVER[$plugin_configs->idp_logout_attr])) {
-        $SESSION->shibboleth_idp_logout = $_SERVER[$plugin_configs->idp_logout_attr];
+    $logoutservervar = empty($plugin_configs->idp_logout_attr)
+        ? auth_plugin_shibbuncif::DEFAULT_IDP_LOGOUT_ATTR : $plugin_configs->idp_logout_attr;
+
+    if (!empty($_SERVER[$logoutservervar])) {
+        $SESSION->shibboleth_idp_logout = $_SERVER[$logoutservervar];
     }
 
 
@@ -112,12 +119,14 @@
     // return it. Because our auth plugin indicates passwords not
     // stored locally, when new user created the password passed
     // here is discarded.
-    if (false === ($user = authenticate_user_login(strtolower($_SERVER[$plugin_configs->username_attr]), '', true))) {
+    if (false === ($user = authenticate_user_login(strtolower($_SERVER[$usernameservervar]), '', true))) {
         // But if the Shibboleth user couldn't be mapped to a
         // valid Moodle user
-        print_error('auth_shib_err_user_fail', auth_plugin_shibbuncif::PLUGIN_NAME);
+        print_error('auth_shibbuncif_err_user_fail', auth_plugin_shibbuncif::PLUGIN_NAME);
     }
 
+    // This will put $user into $_SESSION['USER'] to which the
+    // global $USER is referenced
     complete_user_login($user);
 
     if (user_not_fully_set_up($USER)) {
