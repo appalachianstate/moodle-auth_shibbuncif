@@ -29,13 +29,10 @@
 
 
 
-    // Redirect to frontpage, needed for loginhttps
+    // Redirect to frontpage
     if (optional_param('cancel', 0, PARAM_BOOL)) {
         redirect(new moodle_url('/'));
     }
-
-    //HTTPS is required in this page when $CFG->loginhttps enabled
-    $PAGE->https_required();
 
     // If session marked as timed out, clear that
     unset($SESSION->has_timed_out);
@@ -91,7 +88,6 @@
     $PAGE->set_title("$site->fullname: $loginsite");
     $PAGE->set_heading($site->fullname);
     $PAGE->set_pagelayout('login');
-    $PAGE->verify_https_required();
 
     echo $OUTPUT->header();
     include(__DIR__ . '/wayf_form.php');

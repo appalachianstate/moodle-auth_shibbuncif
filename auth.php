@@ -142,13 +142,7 @@
         {
             global $CFG;
 
-
-            $httpswwwroot = $CFG->wwwroot;
-            if (!empty($CFG->loginhttps)) {
-                $httpswwwroot = str_replace('http:', 'https:', $httpswwwroot);
-            }
-
-            return "{$httpswwwroot}/auth/shibbuncif/wayf.php";
+            return "{$CFG->wwwroot}/auth/shibbuncif/wayf.php";
 
         } // get_wayf_url
 

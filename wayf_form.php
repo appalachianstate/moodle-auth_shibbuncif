@@ -106,7 +106,7 @@
                 </div>
             <?php endif; ?>
 
-            <form action="<?php echo $CFG->httpswwwroot; ?>/login/index.php" method="post" id="login" <?php echo $autocomplete; ?>>
+            <form action="<?php echo "{$CFG->wwwroot}/login/index.php"; ?>" method="post" id="login" <?php echo $autocomplete; ?>>
 
                 <div class="loginform">
                 	<div class="form-group">
@@ -142,7 +142,7 @@
         <div class="desc">
           <?php echo get_string("someallowguest"); ?>
         </div>
-        <form action="<?php echo "{$CFG->httpswwwroot}/login/index.php"; ?>" method="post" id="guestlogin">
+        <form action="<?php echo "{$CFG->wwwroot}/login/index.php"; ?>" method="post" id="guestlogin">
           <div class="guestform">
             <input type="hidden" name="username" value="guest" />
             <input type="hidden" name="password" value="guest" />
