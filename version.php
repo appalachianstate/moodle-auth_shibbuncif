@@ -28,6 +28,6 @@
 
 
 
-    $plugin->version   = 2017052000;        // The current plugin version (Date: YYYYMMDDXX)
+    $plugin->version   = 2017052001;        // The current plugin version (Date: YYYYMMDDXX)
     $plugin->requires  = 2017051500;        // Requires this Moodle version
     $plugin->component = 'auth_shibbuncif'; // Full name of the plugin (used for diagnostics)
