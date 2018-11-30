@@ -90,10 +90,20 @@
     $PAGE->set_pagelayout('login');
 
     echo $OUTPUT->header();
-    include(__DIR__ . '/wayf_form.php');
-    if ($errormsg) {
-        $PAGE->requires->js_init_call('M.util.focus_login_error', null, true);
-    } elseif (!empty($CFG->loginpageautofocus)) {
-        $PAGE->requires->js_init_call('M.util.focus_login_form', null, true);
+    if (isloggedin() and !isguestuser()) {
+        // Prevent logging when already logged in, we do not want them to relogin by accident because sesskey would be changed.
+        echo $OUTPUT->box_start();
+        $params = array('sesskey' => sesskey(), 'loginpage' => 1);
+        $logout = new single_button(new moodle_url('/login/logout.php', $params), get_string('logout'), 'post');
+        $continue = new single_button(new moodle_url('/'), get_string('cancel'), 'get');
+        echo $OUTPUT->confirm(get_string('alreadyloggedin', 'error', fullname($USER)), $logout, $continue);
+        echo $OUTPUT->box_end();
+    } else {
+        include(__DIR__ . '/wayf_form.php');
+        if ($errormsg) {
+            $PAGE->requires->js_init_call('M.util.focus_login_error', null, true);
+        } elseif (!empty($CFG->loginpageautofocus)) {
+            $PAGE->requires->js_init_call('M.util.focus_login_form', null, true);
+        }
     }
     echo $OUTPUT->footer();

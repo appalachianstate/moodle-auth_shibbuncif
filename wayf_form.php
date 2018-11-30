@@ -109,14 +109,14 @@
             <form action="<?php echo "{$CFG->wwwroot}/login/index.php"; ?>" method="post" id="login" <?php echo $autocomplete; ?>>
 
                 <div class="loginform">
-                	<div class="form-group">
-                		<label for="username"><?php echo get_string("username"); ?></label>
-                		<input type="text" class="form-control" name="username" id="username" size="15" value="<?php p($frm->username); ?>"/>
-                	</div>
-                	<div class="form-group">
-                		<label for="password"><?php echo get_string("password"); ?></label>
-                		<input class="form-control" type="password" name="password" id="password" size="15" value="" <?php echo $autocomplete; ?> />
-                	</div>
+                    <div class="form-group">
+                        <label for="username"><?php echo get_string("username"); ?></label>
+                        <input type="text" class="form-control" name="username" id="username" size="15" value="<?php p($frm->username); ?>"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="password"><?php echo get_string("password"); ?></label>
+                        <input class="form-control" type="password" name="password" id="password" size="15" value="" <?php echo $autocomplete; ?> />
+                    </div>
                     <input class="btn btn-default" type="submit" id="loginbtn" value="<?php echo get_string("login"); ?>" />
                 </div>
                 <div class="clearer"><!-- --></div>
@@ -132,6 +132,7 @@
                 <?php if (!empty($CFG->forgottenpasswordurl)): ?>
                 <div class="forgetpass"><a href="<?php echo $CFG->forgottenpasswordurl; ?>"><?php echo get_string("forgotten"); ?></a></div>
                 <?php endif; ?>
+                <input type="hidden" name="logintoken" value="<?php echo s(\core\session\manager::get_login_token()); ?>" />
 
             </form>
 
@@ -144,6 +145,7 @@
         </div>
         <form action="<?php echo "{$CFG->wwwroot}/login/index.php"; ?>" method="post" id="guestlogin">
           <div class="guestform">
+            <input type="hidden" name="logintoken" value="<?php echo s(\core\session\manager::get_login_token()); ?>" />
             <input type="hidden" name="username" value="guest" />
             <input type="hidden" name="password" value="guest" />
             <input type="submit" class="btn btn-default" value="<?php echo get_string("loginguest"); ?>" />
