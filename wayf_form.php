@@ -38,47 +38,51 @@
 
 ?>
 
-<div class="clearfix">
+<div class="clearfix row">
 
-    <div class="col-md-6 well">
+    <div class="col-lg-6 card">
+    
+    	<div class="card-body">
+    		
+    		<h2><?php echo (!empty($config->wayf_heading) ? $config->wayf_heading : 'Login using the UNC Identity Federation'); ?></h2>
 
-        <h2><?php echo (!empty($config->wayf_heading) ? $config->wayf_heading : 'Login using the UNC Identity Federation'); ?></h2>
-
-        <div class="subcontent">
-
-            <label for="idp"><?php echo get_string("auth_shibbuncif_wayf_instructions", auth_plugin_shibbuncif::PLUGIN_NAME); ?></label>
-
-            <form action="wayf.php" method="post" id="guestlogin">
-
-                <select id="idp" class="form-control" name="idp">
-                <option value="-"><?php echo get_string("auth_shibbuncif_wayf_select_prompt", auth_plugin_shibbuncif::PLUGIN_NAME); ?></option>
-                <?php
-                $preferred_idp = auth_plugin_shibbuncif::get_common_domain_cookie();
-                $selected_set = false;
-                foreach($idp_list as $idp_entity_id => $idp_values_array) {
-                    $idp_label = array_shift($idp_values_array);
-                    $selected_attr = '';
-                    if (!$selected_set && $idp_entity_id === $preferred_idp) {
-                        $selected_attr = ' selected';
-                        $selected_set = true;
-                    }
-                    echo "<option value=\"{$idp_entity_id}\"{$selected_attr}>{$idp_label}</option>\n";
-                }
-                ?>
-                </select>
-                <br />
-                <p><input class="btn btn-default" type="submit" value="<?php echo get_string("select"); ?>" accesskey="s" /></p>
-
-            </form>
-
-            <p><?php echo get_string('auth_shibbuncif_contact_administrator', auth_plugin_shibbuncif::PLUGIN_NAME, get_admin()->email); ?></p>
-
-        </div>
+                <div class="subcontent">
+        
+                    <label for="idp"><?php echo get_string("auth_shibbuncif_wayf_instructions", auth_plugin_shibbuncif::PLUGIN_NAME); ?></label>
+        
+                    <form action="wayf.php" method="post" id="guestlogin">
+        
+                        <select id="idp" class="form-control" name="idp">
+                        <option value="-"><?php echo get_string("auth_shibbuncif_wayf_select_prompt", auth_plugin_shibbuncif::PLUGIN_NAME); ?></option>
+                        <?php
+                        $preferred_idp = auth_plugin_shibbuncif::get_common_domain_cookie();
+                        $selected_set = false;
+                        foreach($idp_list as $idp_entity_id => $idp_values_array) {
+                            $idp_label = array_shift($idp_values_array);
+                            $selected_attr = '';
+                            if (!$selected_set && $idp_entity_id === $preferred_idp) {
+                                $selected_attr = ' selected';
+                                $selected_set = true;
+                            }
+                            echo "<option value=\"{$idp_entity_id}\"{$selected_attr}>{$idp_label}</option>\n";
+                        }
+                        ?>
+                        </select>
+                        <br />
+                        <p><input class="btn btn-default" type="submit" value="<?php echo get_string("select"); ?>" accesskey="s" /></p>
+        
+                    </form>
+        
+                    <p><?php echo get_string('auth_shibbuncif_contact_administrator', auth_plugin_shibbuncif::PLUGIN_NAME, get_admin()->email); ?></p>
+        
+                </div>
+    		
+    	</div>
 
     </div>
 
 
-    <div class="col-md-6">
+    <div class="col-lg-6">
 
         <?php if (($CFG->registerauth == 'email') || !empty($CFG->registerauth)): ?>
         <div class="skiplinks">
