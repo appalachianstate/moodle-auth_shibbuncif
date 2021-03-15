@@ -69,7 +69,7 @@
                         ?>
                         </select>
                         <br />
-                        <p><input class="btn btn-default" type="submit" value="<?php echo get_string("select"); ?>" accesskey="s" /></p>
+                        <p><input class="btn btn-secondary" type="submit" value="<?php echo get_string("select"); ?>" accesskey="s" /></p>
         
                     </form>
         
@@ -121,7 +121,7 @@
                         <label for="password"><?php echo get_string("password"); ?></label>
                         <input class="form-control" type="password" name="password" id="password" size="15" value="" <?php echo $autocomplete; ?> />
                     </div>
-                    <input class="btn btn-default" type="submit" id="loginbtn" value="<?php echo get_string("login"); ?>" />
+                    <input class="btn btn-secondary" type="submit" id="loginbtn" value="<?php echo get_string("login"); ?>" />
                 </div>
                 <div class="clearer"><!-- --></div>
 
@@ -152,7 +152,7 @@
             <input type="hidden" name="logintoken" value="<?php echo s(\core\session\manager::get_login_token()); ?>" />
             <input type="hidden" name="username" value="guest" />
             <input type="hidden" name="password" value="guest" />
-            <input type="submit" class="btn btn-default" value="<?php echo get_string("loginguest"); ?>" />
+            <input type="submit" class="btn btn-secondary" value="<?php echo get_string("loginguest"); ?>" />
           </div>
         </form>
         </div>
