@@ -47,6 +47,10 @@
     $string['auth_shibbuncif_idp_logout_attr_desc']         = 'Server variable name that contains the Shibboleth IdP logout URL';
     $string['auth_shibbuncif_wayf']                         = 'WAYF page';
     $string['auth_shibbuncif_wayf_desc']                    = 'When checked, Moodle will display a WAYF (discovery) page with a drop-down list of campus Identity Providers from which the user can make a selection.';
+    $string['auth_shibbuncif_forgot_password_show']         = 'Show forgot password link';
+    $string['auth_shibbuncif_forgot_password_show_desc']    = 'Display the forgot password link on SSO form of wayf login page.';
+    $string['auth_shibbuncif_forgot_password_url']          = 'Alt. forgot password';
+    $string['auth_shibbuncif_forgot_password_url_desc']     = 'URL to which Shibboleth users will be redirected to reset a password. If blank, users will be redirected to the forgottenpasswordurl config; if that is blank, users will be redirected to the location Moodle would normally use.';
     $string['auth_shibbuncif_wayf_idp_list']                = 'WAYF IdP list';
     $string['auth_shibbuncif_wayf_idp_list_desc']           = 'List of Identity Providers from which the user can select on the WAYF (discovery) page.<br /><br />Each line should be a comma-separated tuple for the Identity Provider containing the entityID URL (see the Shibboleth metadata file), the name as it will be displayed in the drop-down list, and an optional third field with a session initiator (URL) to use for that Idenity Provider.<br /><br />Blank lines are allowed for readability.';
     $string['auth_shibbuncif_wayf_heading']                 = 'WAYF page heading';

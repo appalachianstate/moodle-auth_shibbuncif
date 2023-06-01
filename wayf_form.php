@@ -36,6 +36,25 @@
         $autocomplete = '';
     }
 
+    // Forgot password for Shibb accounts.
+    $forgotConfig = $config->forgot_password_url;
+    if (!empty($forgotConfig)) {
+        $forgotShib = $forgotConfig;
+    } else {
+        if (empty($CFG->forgottenpasswordurl)) {
+            $forgotShib = $CFG->wwwroot . '/login/forgot_password.php';
+        } else {
+            $forgotShib = $CFG->forgottenpasswordurl;
+        }
+    }
+
+    // Forgot password for manual accounts.
+    if (empty($CFG->forgottenpasswordurl)) {
+        $forgotMan = $CFG->wwwroot . '/login/forgot_password.php';
+    } else {
+        $forgotMan = $CFG->forgottenpasswordurl;
+    }
+
 ?>
 
 <div class="clearfix row">
@@ -72,7 +91,10 @@
                         <p><input class="btn btn-secondary" type="submit" value="<?php echo get_string("select"); ?>" accesskey="s" /></p>
         
                     </form>
-        
+                    <?php if (!empty($config->forgot_password_show) &&$config->forgot_password_show):  ?>
+                    <p class="forgetpass"><a href="<?php echo $forgotShib; ?>"><?php echo get_string("forgotaccount"); ?></a></p>
+                    <?php endif; ?>
+
                     <p><?php echo get_string('auth_shibbuncif_contact_administrator', auth_plugin_shibbuncif::PLUGIN_NAME, get_admin()->email); ?></p>
         
                 </div>
@@ -133,9 +155,7 @@
                 <?php } ?>
 
                 <div class="clearer"><!-- --></div>
-                <?php if (!empty($CFG->forgottenpasswordurl)): ?>
-                <div class="forgetpass"><a href="<?php echo $CFG->forgottenpasswordurl; ?>"><?php echo get_string("forgotten"); ?></a></div>
-                <?php endif; ?>
+                <div class="forgetpass"><a href="<?php echo $forgotMan; ?>"><?php echo get_string("forgotten"); ?></a></div>
                 <input type="hidden" name="logintoken" value="<?php echo s(\core\session\manager::get_login_token()); ?>" />
 
             </form>

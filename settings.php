@@ -81,6 +81,16 @@
             'on', array('off' => get_string('no'), 'on' => get_string('yes')),
             array('auth_plugin_shibbuncif', 'write_setting_hook')));
 
+        // Display our forgot password link.
+        $settings->add(new admin_setting_configcheckbox(auth_plugin_shibbuncif::PLUGIN_NAME . '/forgot_password_show',
+            get_string('auth_shibbuncif_forgot_password_show', auth_plugin_shibbuncif::PLUGIN_NAME),
+            get_string('auth_shibbuncif_forgot_password_show_desc', auth_plugin_shibbuncif::PLUGIN_NAME), "1"));
+
+        // Set our forgot password link.
+        $settings->add(new admin_setting_configtext(auth_plugin_shibbuncif::PLUGIN_NAME . '/forgot_password_url',
+            get_string('auth_shibbuncif_forgot_password_url', auth_plugin_shibbuncif::PLUGIN_NAME),
+            get_string('auth_shibbuncif_forgot_password_url_desc', auth_plugin_shibbuncif::PLUGIN_NAME), '', PARAM_URL));
+
         // WAYF IdP list.
         $settings->add(new auth_shibbuncif_admin_setting_special_idp_configtextarea(auth_plugin_shibbuncif::PLUGIN_NAME . '/wayf_idp_list',
             get_string('auth_shibbuncif_wayf_idp_list', auth_plugin_shibbuncif::PLUGIN_NAME),
