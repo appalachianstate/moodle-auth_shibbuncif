@@ -46,7 +46,7 @@
         ? auth_plugin_shibbuncif::DEFAULT_USERNAME_ATTR : $plugin_configs->username_attr;
 
     if (empty($_SERVER[$usernameservervar])) {
-        print_error('auth_shibbuncif_err_misconfigured', auth_plugin_shibbuncif::PLUGIN_NAME, null, get_admin()->email);
+        throw new \moodle_exception('auth_shibbuncif_err_misconfigured', auth_plugin_shibbuncif::PLUGIN_NAME, null, get_admin()->email);
     }
 
     // Support for WAYFless URLs.
@@ -122,7 +122,7 @@
     if (false === ($user = authenticate_user_login(strtolower($_SERVER[$usernameservervar]), '', true))) {
         // But if the Shibboleth user couldn't be mapped to a
         // valid Moodle user
-        print_error('auth_shibbuncif_err_user_fail', auth_plugin_shibbuncif::PLUGIN_NAME);
+        throw new \moodle_exception('auth_shibbuncif_err_user_fail', auth_plugin_shibbuncif::PLUGIN_NAME);
     }
 
     // This will put $user into $_SESSION['USER'] to which the
